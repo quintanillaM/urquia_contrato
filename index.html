@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Contrato PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Generador de Contrato</h1>
+    <form id="contratoForm">
+        <label for="nombre">Nombre del Empleado:</label>
+        <input type="text" id="nombre" required><br>
+
+        <label for="apellido">Apellido del Empleado:</label>
+        <input type="text" id="apellido" required><br>
+
+        <label for="dpi">Dui del Empleado:</label>
+        <input type="text" id="dpi" required><br>
+
+        <label for="puesto">Puesto:</label>
+        <input type="text" id="puesto" required><br>
+
+        <label for="salario">Salario Mensual:</label>
+        <input type="text" id="salario" required><br>
+
+        <label for="fecha">Fecha de Inicio:</label>
+        <input type="date" id="fecha" required><br>
+
+        <label for="duracion">Duración del Contrato:</label>
+        <input type="text" id="duracion" required><br>
+
+        <label for="jornada">Jornada Laboral:</label>
+        <input type="text" id="jornada" required><br>
+
+        <label for="dias">Días de Trabajo:</label>
+        <input type="text" id="dias" required><br>
+
+        <button type="submit">Generar PDF</button>
+    </form>
+
+
+
+    <script>
+        document.getElementById('contratoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const dpi = document.getElementById('dpi').value;
+            const puesto = document.getElementById('puesto').value;
+            const salario = document.getElementById('salario').value;
+            const fecha = document.getElementById('fecha').value;
+            const duracion = document.getElementById('duracion').value;
+            const jornada = document.getElementById('jornada').value;
+            const dias = document.getElementById('dias').value;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Establecer la fuente y tamaño de letra
+            doc.setFont("Times", "normal");
+            doc.setFontSize(12);
+            
+            // Título
+            doc.text('Contrato de Trabajo', 10, 10);
+            doc.setFontSize(10);
+            doc.text('Entre:', 10, 20);
+
+            // Texto del contrato
+            const contratoTexto = `
+    La Empresa Urquia
+    Representada por: Vladimir Urquia
+    Y el Empleado: ${nombre} ${apellido}
+    DUI: ${dpi}
+
+    Cláusula 1: Objeto del Contrato
+    El presente contrato tiene por objeto la prestación de servicios de ${puesto} en la Empresa Urquia.
+
+    Cláusula 2: Duración
+    Este contrato tendrá una duración de ${duracion}, comenzando el ${fecha}, y finalizará el [fecha de finalización, si aplica].
+
+    Cláusula 3: Remuneración
+    El empleado recibirá un salario mensual de $${salario}, pagaderos el último día hábil de cada mes.
+
+    Cláusula 4: Jornada Laboral
+    El empleado se compromete a trabajar ${jornada} horas semanales, distribuidas en los días ${dias}.
+
+    Cláusula 5: Obligaciones del Empleado
+    El empleado se compromete a:
+    - Cumplir con las tareas asignadas de manera eficiente y puntual.
+    - Respetar las normas y procedimientos establecidos por la empresa.
+    - Mantener la confidencialidad de la información relacionada con la empresa y sus clientes.
+    - Informar a la empresa sobre cualquier situación que pueda afectar el desempeño de sus funciones.
+
+    Cláusula 6: Terminación
+    Este contrato podrá ser terminado por cualquiera de las partes con un aviso previo de [número de días] días. 
+    En caso de incumplimiento de las obligaciones, la terminación podrá ser inmediata.
+
+    Cláusula 7: Legislación Aplicable
+    Este contrato se regirá por la legislación laboral de la República de El Salvador, y cualquier controversia se resolverá en los tribunales competentes.
+
+    Firmado:
+    
+    _______________________________________
+    ${nombre} ${apellido} (Empleado)
+
+    _______________________________________
+    Vladimir Urquia (Representante de la Empresa)
+
+    Fecha: ${new Date().toLocaleDateString()}
+`;
+
+            // Simulando la justificación del texto
+            const textoContrato = contratoTexto.split('\n');
+            let y = 30; // Posición inicial en Y
+
+            textoContrato.forEach(linea => {
+                doc.text(linea, 10, y, { maxWidth: 190 }); // Ajustando el ancho para simular la justificación
+                y += 10; // Incrementar la posición en Y para la próxima línea
+            });
+
+            doc.save(`${nombre}_${apellido}_Contrato.pdf`);
+        });
+    </script>
+</body>
+</html>
+
+   
